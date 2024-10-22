@@ -219,6 +219,10 @@ void TNeutron::OnHit(const value_type x1, const state_type &y1, value_type &x2, 
 		complex<double> k1 = sqrt(complex<double>(Enormal, -leaving.mat.FermiImag*1e-9)); // wavenumber in first solid
 		complex<double> k2 = sqrt(complex<double>(Enormal - Estep, -entering.mat.FermiImag*1e-9)); // wavenumber in second solid
 		double reflprob = norm((k1 - k2)/(k1 + k2)); // specular reflection probability
+		if (entering.mat.WSDepth > 0){ //if using WS potential to mimic a thin layer of hydrogenous material
+			double d = entering.mat.WSDepth
+			double WSreflprob = norm((sinh(pi*d*(k1-k2))/(sinh(pi*d*(k1+k2))
+			reflprob = WSreflprob //replace the reflection probability with the new reflection probability
 		if (Enormal > Estep){ // transmission only possible if Enormal > Estep
 			if (prob < MRreflprob + MRtransprob + reflprob*(1 - MRreflprob - MRtransprob)){ // reflection, scale down reflprob so MRreflprob + MRtransprob + reflprob + transprob = 1
 				if (!UseMRModel && unidist(mc) < mat.DiffProb + mat.ModifiedLambertProb){
